@@ -26,9 +26,30 @@ export async function showSearch() {
     }
 
     const results: SearchResults = await response.json() as SearchResults;
+    if (!results || results.count === 0) {
+        return;
+    }
 
     const quickPick = window.createQuickPick<SearchResultQuickPickItem>();
     quickPick.items = results.results.map(result => new SearchResultQuickPickItem(result));
+
+    quickPick.onDidChangeSelection((items) => {
+        const item = items[0];
+					if (item instanceof SearchResultQuickPickItem) {
+                        // Insert the URL into the active text editor
+                        if (window.activeTextEditor) {
+                            const editor = window.activeTextEditor;
+
+                            const url = `[${item.result.displayName}](${item.result.url})`;
+
+                            editor.edit((editBuilder) => {
+                                editBuilder.insert(editor.selection.active, url);
+                            });
+                        }
+                        quickPick.hide();
+					}
+        quickPick.hide();
+    });
 
     quickPick.show();
 }
