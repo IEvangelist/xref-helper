@@ -52,14 +52,14 @@
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
     "rimraf": "^5.0.0",
-    "semantic-release": "^21.0.2",
+    "semantic-release": "^24.1.1",
     "semantic-release-stop-before-publish": "^1.0.0",
     "semantic-release-vsce": "^5.5.9",
     "typescript": "^5.0.4"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/clarkio/vscode-extension-template.git"
+    "url": "https://github.com/IEvangelist/xref-helper.git"
   },
   "vsce": {
     "pre-release": true
