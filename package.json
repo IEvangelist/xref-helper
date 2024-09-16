@@ -4,7 +4,7 @@
   "description": "TODO",
   "version": "1.0.2",
   "engines": {
-    "vscode": "^1.78.0"
+    "vscode": "^1.93.1"
   },
   "publisher": "IEvangelist",
   "categories": [
