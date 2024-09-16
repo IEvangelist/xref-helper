@@ -1,5 +1,6 @@
 import { window, QuickPickItem, QuickInputButton, QuickPickItemKind, ThemeIcon, Uri } from "vscode";
 import { SearchResult, SearchResults } from "./search-results";
+import fetch from "node-fetch";
 
 export async function showSearch() {
     const input = await window.showInputBox({

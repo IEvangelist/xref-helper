@@ -57,10 +57,10 @@
     "semantic-release-stop-before-publish": "^1.0.0",
     "semantic-release-vsce": "^5.5.9",
     "typescript": "^5.0.4",
-    "@types/isomorphic-fetch": "^0.0.39"
+    "@types/node-fetch": "^2.6.11"
   },
   "dependencies": {
-    "isomorphic-fetch": "^3.0.0"
+    "node-fetch": "3.3.2"
   },
   "repository": {
     "type": "git",
