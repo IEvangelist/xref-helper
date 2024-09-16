@@ -1,12 +1,12 @@
 {
-  "name": "vscode-new-extension-template",
-  "displayName": "Clarkio's VS Code Extension Template",
-  "description": "An extension template used for jumpstarting development of VS Code extensions",
+  "name": "xref-helper",
+  "displayName": "TODO",
+  "description": "TODO",
   "version": "1.0.2",
   "engines": {
     "vscode": "^1.78.0"
   },
-  "publisher": "clarkio",
+  "publisher": "IEvangelist",
   "categories": [
     "Other"
   ],
@@ -16,8 +16,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-extension-template.helloWorld",
-        "title": "Hello World"
+        "command": "xref.search",
+        "title": "Search for XREF",
+        "shortTitle": "Search XREF"
       }
     ]
   },
@@ -55,7 +56,11 @@
     "semantic-release": "^24.1.1",
     "semantic-release-stop-before-publish": "^1.0.0",
     "semantic-release-vsce": "^5.5.9",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "@types/isomorphic-fetch": "^0.0.39"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^3.0.0"
   },
   "repository": {
     "type": "git",
