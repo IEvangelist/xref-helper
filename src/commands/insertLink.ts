@@ -6,6 +6,7 @@ import { xrefLinkFormatter } from "./formatters/xrefLinkFormatter";
 import { ApiService } from "../services/api-service";
 import { LinkType } from "./types/LinkType";
 import { mdLinkFormatter } from "./formatters/mdLinkFormatter";
+import { ItemType } from "./types/ItemType";
 
 export async function insertLink(linkType: LinkType) {
     const searchTerm = await window.showInputBox({
@@ -38,11 +39,10 @@ export async function insertLink(linkType: LinkType) {
             // Use has selected a search result.
             searchResultSelection = selectedItem;
 
-            if (searchResultSelection.itemType === 'Namespace') {
-
+            if (searchResultSelection.itemType === ItemType.namespace) {                
                 const url = linkType === LinkType.Xref
-                    ? await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result)
-                    : await mdLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);
+                    ? await xrefLinkFormatter(UrlFormat.fullName, searchResultSelection!.result)
+                    : await mdLinkFormatter(UrlFormat.fullName, searchResultSelection!.result);
 
                 // Insert the URL into the active text editor
                 if (!insertUrlIntoActiveTextEditor(url)) {
@@ -52,7 +52,7 @@ export async function insertLink(linkType: LinkType) {
 
                 quickPick.hide();
                 quickPick.dispose();
-                
+
                 return;
             }
 
@@ -67,6 +67,7 @@ export async function insertLink(linkType: LinkType) {
             quickPick.show();
 
         } else if (!!selectedItem) {
+            // At this point, the selectedItem.label is a UrlFormat enum value.
             const url = linkType === LinkType.Xref
                 ? await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result)
                 : await mdLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);
