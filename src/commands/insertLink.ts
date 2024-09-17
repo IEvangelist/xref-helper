@@ -39,7 +39,7 @@ export async function insertLink(linkType: LinkType) {
         const selectedItem = items[0];
 
         if (selectedItem instanceof SearchResultQuickPickItem) {
-            // Use has selected a search result.
+            // User has selected a search result.
             searchResultSelection = selectedItem;
 
             const selectedText = getUserSelectedText();
