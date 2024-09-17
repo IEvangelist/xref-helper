@@ -1,4 +1,4 @@
-import axios from 'axios';
+import fetch from "node-fetch";
 import { parseStringPromise } from 'xml2js';
 import { ItemType } from "./types/ItemType";
 
@@ -7,10 +7,14 @@ async function getDocIdAsync(displayName: string, apiType: ItemType, gitUrl: str
         return displayName;
     }
 
-    const response = await axios.get(gitUrl);
-    const text = response.data;
+    //const response = await axios.get(gitUrl);
+    const response = await fetch(gitUrl);
 
-    const xdoc = await parseStringPromise(text);
+    if (!response.ok) {
+        return null;
+    }
+
+    const xdoc = await parseStringPromise(response.text);
 
     if ([ItemType.class, ItemType.struct, ItemType.interface, ItemType.enum].includes(apiType)) {
         const typeSignature = xdoc.TypeSignature?.find((x: any) => x.$.Language === 'DocId');
