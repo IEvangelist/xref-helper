@@ -21,6 +21,6 @@ export class ConfigReader {
         
         ConfigReader.appConfig = new AppConfig(config);
 
-        return ConfigReader.appConfig
+        return ConfigReader.appConfig;
     };
 }

@@ -14,11 +14,11 @@ export async function startApiSearch() {
     if (!searchTerm) {
         return;
     }
-    
+
     const searchResults = await ApiService.searchApi(searchTerm);
     if (searchResults instanceof EmptySearchResults && searchResults.isEmpty === true) {
         window.showWarningMessage(`Failed to find results for '${searchTerm}'.`);
-    }    
+    }
 
     // Create a quick pick to display the search results, allowing the user to select a type or member.
     const quickPick = window.createQuickPick<SearchResultQuickPickItem | QuickPickItem>();
@@ -46,8 +46,8 @@ export async function startApiSearch() {
             quickPick.placeholder = 'Select the format of the URL to insert.';
             quickPick.show();
 
-        } else if (!!selectedItem) {            
-            const url = await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);            
+        } else if (!!selectedItem) {
+            const url = await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);
 
             // Insert the URL into the active text editor
             if (!insertUrlIntoActiveTextEditor(url)) {

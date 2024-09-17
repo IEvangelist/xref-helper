@@ -1,12 +1,14 @@
 import { SearchResult } from "./SearchResult";
 
 export type SearchResults = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     "@nextLink"?: string | undefined;
     count: number;
     results: SearchResult[];
 };
 
 export default class EmptySearchResults implements SearchResults {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     "@nextLink"?: string | undefined = undefined;
     count: number = 0;
     results: SearchResult[] = [];

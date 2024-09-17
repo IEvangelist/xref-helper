@@ -1,4 +1,4 @@
-import { ItemType } from "./types/ItemType";
+import { ItemType } from "./ItemType";
 
 
 export type SearchResult = {
@@ -6,5 +6,4 @@ export type SearchResult = {
     displayName: string;
     itemType: ItemType;
     url: string;
-    "@rawHtml": string | undefined;
 };

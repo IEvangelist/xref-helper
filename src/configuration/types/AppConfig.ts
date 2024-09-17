@@ -31,6 +31,7 @@ export class AppConfig {
      */
     queryStringParameters: StringPair[] | undefined =
         [
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             { "api-version": "0.2" },
             { "locale": "en-us" },
         ];
@@ -52,6 +53,6 @@ export class AppConfig {
             .join("&");
 
         return `${this.apiUrl}?${queryString}&search=${searchTerm}`;
-    }
+    };
 };
 
