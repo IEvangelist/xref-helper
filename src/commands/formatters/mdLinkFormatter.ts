@@ -34,9 +34,9 @@ export const mdLinkFormatter = async (
         case UrlFormat.fullName:
             return `[${displayName}](${url})`;
 
-        // Displays the type with the name:
+        // Displays the name with its type:
         //   [Class SmtpClient](/dotnet/api/system.net.mail.smtpclient)
-        case UrlFormat.typeWithName:
+        case UrlFormat.nameWithType:
             {
                 const [type, ...name] = displayName.split('.');
                 return `[${type} ${name.join('.')}](${url})`;
@@ -56,8 +56,8 @@ export const mdLinkFormatter = async (
                 // If there isn't selected text, prompt the user to enter a custom name
                 if (!selectedText) {
                     const inputDisplayName = await window.showInputBox({
-                        title: 'Enter a custom name',
-                        placeHolder: 'Enter a custom name for the link.'
+                        title: 'Enter custom link text',
+                        placeHolder: 'Enter custom link text to display.'
                     });
 
                     return `[${inputDisplayName ?? fallbackDisplayName}](${url})`;

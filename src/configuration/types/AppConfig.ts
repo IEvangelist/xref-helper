@@ -11,7 +11,7 @@ export class AppConfig {
      * The format of the URL to insert.
      * - Default: Only displays the API name.
      * - Full name: Displays the fully qualified name.
-     * - Type with name: Displays the type with the name.
+     * - Name with type: Displays the name and its type.
      * - Custom name: Allows the user to enter a custom name.
      * @default `undefined`
      */

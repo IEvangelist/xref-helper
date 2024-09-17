@@ -27,12 +27,12 @@
         "xrefHelper.defaultUrlFormat": {
           "type": "string",
           "description": "The default URL format to use when inserting an XREF URL.",
-          "enum": [ "Default", "Full name", "Type with name", "Custom name"],
+          "enum": [ "Default", "Full name", "Name with type", "Custom name"],
           "default": "Default"
         },
         "xrefHelper.apiUrl": {
           "type": "string",
-          "description": "The URL to use when searching for XREFs. (Defaults to the .NET API search URL)",
+          "description": "The URL to use when searching for XREFs. (Defaults to the .NET API search URL.)",
           "default": "https://learn.microsoft.com/api/apibrowser/dotnet/search"
         },
         "xrefHelper.queryStringParameters": {

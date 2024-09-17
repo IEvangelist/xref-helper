@@ -34,7 +34,7 @@ export const xrefLinkFormatter = async (
         case UrlFormat.fullName:
             return `<xref:${encodedDisplayName}?displayProperty=fullName>`;
 
-        case UrlFormat.typeWithName:
+        case UrlFormat.nameWithType:
             return `<xref:${encodedDisplayName}?displayProperty=nameWithType>`;
 
         case UrlFormat.customName:
@@ -49,8 +49,8 @@ export const xrefLinkFormatter = async (
                 // If there isn't selected text, prompt the user to enter a custom name
                 if (!selectedText) {
                     const inputDisplayName = await window.showInputBox({
-                        title: 'Enter a custom name',
-                        placeHolder: 'Enter a custom name for the link.'
+                        title: 'Enter custom link text',
+                        placeHolder: 'Enter the custom link text to display.'
                     });
 
                     return `[${inputDisplayName ?? fallbackDisplayName}](xref:${encodedDisplayName})`;

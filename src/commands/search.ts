@@ -39,7 +39,7 @@ export async function startApiSearch() {
             quickPick.items = [
                 { label: UrlFormat.default, description: 'Only displays the API name.' },
                 { label: UrlFormat.fullName, description: 'Displays the fully qualified name.' },
-                { label: UrlFormat.typeWithName, description: 'Displays the type with the name.' },
+                { label: UrlFormat.nameWithType, description: 'Displays the type and name in the format "Type.Name".' },
                 { label: UrlFormat.customName, description: 'Allows the user to enter a custom name' },
             ];
             quickPick.title = 'Select URL format.';
