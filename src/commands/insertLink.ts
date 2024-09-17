@@ -1,12 +1,14 @@
-import { SearchResultQuickPickItem } from "./types/SearchResultQuickPickItem";
-import EmptySearchResults from "./types/SearchResults";
-import { UrlFormat } from "./types/UrlFormat";
-import { window, QuickPickItem } from "vscode";
-import { xrefLinkFormatter } from "./formatters/xrefLinkFormatter";
 import { ApiService } from "../services/api-service";
+import { EmptySearchResults } from "./types/SearchResults";
+import { ItemType } from "./types/ItemType";
 import { LinkType } from "./types/LinkType";
 import { mdLinkFormatter } from "./formatters/mdLinkFormatter";
-import { ItemType } from "./types/ItemType";
+import { SearchResultQuickPickItem } from "./types/SearchResultQuickPickItem";
+import { UrlFormat } from "./types/UrlFormat";
+import { window, QuickPickItem, QuickPick } from "vscode";
+import { xrefLinkFormatter } from "./formatters/xrefLinkFormatter";
+import { SearchResult } from "./types/SearchResult";
+import { getUserSelectedText, replaceUserSelectedText } from "../utils";
 
 export async function insertLink(linkType: LinkType) {
     const searchTerm = await window.showInputBox({
@@ -25,7 +27,8 @@ export async function insertLink(linkType: LinkType) {
 
     // Create a quick pick to display the search results, allowing the user to select a type or member.
     const quickPick = window.createQuickPick<SearchResultQuickPickItem | QuickPickItem>();
-    quickPick.items = searchResults.results.map(result => new SearchResultQuickPickItem(result));
+    quickPick.items = searchResults.results.map(
+        (result: SearchResult) => new SearchResultQuickPickItem(result));
     quickPick.title = `Search results for '${searchTerm}'`;
     quickPick.placeholder = 'Select a type or member to insert a link to.';
 
@@ -39,19 +42,24 @@ export async function insertLink(linkType: LinkType) {
             // Use has selected a search result.
             searchResultSelection = selectedItem;
 
+            const selectedText = getUserSelectedText();
+            if (selectedText) {
+                await createAndInsertLink(
+                    linkType, 
+                    UrlFormat.customName, 
+                    searchResultSelection, 
+                    quickPick,
+                    true);
+
+                return;
+            }
+
             if (searchResultSelection.itemType === ItemType.namespace) {                
-                const url = linkType === LinkType.Xref
-                    ? await xrefLinkFormatter(UrlFormat.fullName, searchResultSelection!.result)
-                    : await mdLinkFormatter(UrlFormat.fullName, searchResultSelection!.result);
-
-                // Insert the URL into the active text editor
-                if (!insertUrlIntoActiveTextEditor(url)) {
-                    window.setStatusBarMessage(
-                        `Failed to insert URL into the active text editor.`, 3000);
-                }
-
-                quickPick.hide();
-                quickPick.dispose();
+                await createAndInsertLink(
+                    linkType, 
+                    UrlFormat.fullName, 
+                    searchResultSelection, 
+                    quickPick);
 
                 return;
             }
@@ -68,22 +76,36 @@ export async function insertLink(linkType: LinkType) {
 
         } else if (!!selectedItem) {
             // At this point, the selectedItem.label is a UrlFormat enum value.
-            const url = linkType === LinkType.Xref
-                ? await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result)
-                : await mdLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);
-
-            // Insert the URL into the active text editor
-            if (!insertUrlIntoActiveTextEditor(url)) {
-                window.setStatusBarMessage(
-                    `Failed to insert URL into the active text editor.`, 3000);
-            }
-
-            quickPick.hide();
-            quickPick.dispose();
+            await createAndInsertLink(
+                linkType, 
+                selectedItem.label as UrlFormat, 
+                searchResultSelection!, 
+                quickPick);
         }
     });
 
     quickPick.show();
+}
+
+async function createAndInsertLink(
+    linkType: LinkType,
+    format: UrlFormat,
+    searchResultSelection: SearchResultQuickPickItem, 
+    quickPick: QuickPick<SearchResultQuickPickItem | QuickPickItem>,
+    isTextReplacement: boolean = false) {
+
+    const url = linkType === LinkType.Xref
+        ? await xrefLinkFormatter(format, searchResultSelection!.result)
+        : await mdLinkFormatter(format, searchResultSelection!.result);
+
+    // Insert the URL into the active text editor
+    if (!insertUrlIntoActiveTextEditor(url, isTextReplacement)) {
+        window.setStatusBarMessage(
+            `Failed to insert URL into the active text editor.`, 3000);
+    }
+
+    quickPick.hide();
+    quickPick.dispose();
 }
 
 /**
@@ -91,9 +113,15 @@ export async function insertLink(linkType: LinkType) {
  * @param url The URL to insert into the active text editor.
  * @returns `boolean`
  */
-function insertUrlIntoActiveTextEditor(url?: string | undefined): boolean {
+function insertUrlIntoActiveTextEditor(
+    url?: string | undefined,
+    isTextReplacement: boolean = false): boolean {
     if (!url) {
         return false;
+    }
+
+    if (isTextReplacement) {
+        replaceUserSelectedText(url);
     }
 
     if (window.activeTextEditor || window.activeTextEditor!.selection) {
