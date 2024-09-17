@@ -4,8 +4,10 @@ import { UrlFormat } from "./types/UrlFormat";
 import { window, QuickPickItem } from "vscode";
 import { xrefLinkFormatter } from "./formatters/xrefLinkFormatter";
 import { ApiService } from "../services/api-service";
+import { LinkType } from "./types/LinkType";
+import { mdLinkFormatter } from "./formatters/mdLinkFormatter";
 
-export async function startApiSearch() {
+export async function insertLink(linkType: LinkType) {
     const searchTerm = await window.showInputBox({
         title: "Search APIs",
         placeHolder: "Search for a type or member by name."
@@ -36,6 +38,24 @@ export async function startApiSearch() {
             // Use has selected a search result.
             searchResultSelection = selectedItem;
 
+            if (searchResultSelection.itemType === 'Namespace') {
+
+                const url = linkType === LinkType.Xref
+                    ? await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result)
+                    : await mdLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);
+
+                // Insert the URL into the active text editor
+                if (!insertUrlIntoActiveTextEditor(url)) {
+                    window.setStatusBarMessage(
+                        `Failed to insert URL into the active text editor.`, 3000);
+                }
+
+                quickPick.hide();
+                quickPick.dispose();
+                
+                return;
+            }
+
             quickPick.items = [
                 { label: UrlFormat.default, description: 'Only displays the API name.' },
                 { label: UrlFormat.fullName, description: 'Displays the fully qualified name.' },
@@ -47,7 +67,9 @@ export async function startApiSearch() {
             quickPick.show();
 
         } else if (!!selectedItem) {
-            const url = await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);
+            const url = linkType === LinkType.Xref
+                ? await xrefLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result)
+                : await mdLinkFormatter(selectedItem.label as UrlFormat, searchResultSelection!.result);
 
             // Insert the URL into the active text editor
             if (!insertUrlIntoActiveTextEditor(url)) {
