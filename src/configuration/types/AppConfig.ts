@@ -15,38 +15,44 @@ export class AppConfig {
      * - Custom name: Allows the user to enter a custom name.
      * @default `undefined`
      */
-    defaultUrlFormat: UrlFormat | undefined = undefined;
+    defaultUrlFormat: UrlFormat | undefined;
 
     /**
      * The default API URL to query.
      * - This URL is used to query the API for search results.
      * @default "https://learn.microsoft.com/api/apibrowser/dotnet/search"
      */
-    apiUrl = "https://learn.microsoft.com/api/apibrowser/dotnet/search";
+    apiUrl: string | undefined;
 
     /**
      * The default query string parameters to include in the API URL.
      * - These parameters are used to filter the search results.
      * @default [ { "api-version": "0.2" }, { "locale": "en-us" } ]
      */
-    queryStringParameters: StringPair[] | undefined =
-        [
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            { "api-version": "0.2" },
-            { "locale": "en-us" },
-        ];
+    queryStringParameters: StringPair[] | undefined;
 
     constructor(workspaceConfig: WorkspaceConfiguration) {
-        this.defaultUrlFormat = workspaceConfig.get<UrlFormat>(nameof<AppConfig>("defaultUrlFormat")) 
-            || this.defaultUrlFormat;
+        const urlFormat = workspaceConfig.get<UrlFormat>(nameof<AppConfig>("defaultUrlFormat"))
+        if (urlFormat) {
+            this.defaultUrlFormat = urlFormat;
+        }
 
-        this.apiUrl = workspaceConfig.get<string>(nameof<AppConfig>("apiUrl")) 
-            || this.apiUrl;
+        const apiUrl = workspaceConfig.get<string>(nameof<AppConfig>("apiUrl"))
+        if (apiUrl) {
+            this.apiUrl = apiUrl;
+        }
 
-        this.queryStringParameters = workspaceConfig.get<StringPair[]>(nameof<AppConfig>("queryStringParameters")) 
-            || this.queryStringParameters;
+        const queryParams = workspaceConfig.get<StringPair[]>(nameof<AppConfig>("queryStringParameters"))
+        if (queryParams) {
+            this.queryStringParameters = queryParams;
+        }
     }
 
+    /**
+     * Builds the API URL with the search term.
+     * @param searchTerm The search term to include in the API URL.
+     * @returns A fully qualified URL with query string parameters that includes the search term.
+     */
     public buildApiUrlWithSearchTerm = (searchTerm: string): string => {
         const queryString = (this.queryStringParameters ?? [])
             .map((pair) => Object.entries(pair).map(([key, value]) => `${key}=${value}`).join("&"))

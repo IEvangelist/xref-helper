@@ -1,7 +1,6 @@
 /**
  * The search result `itemType`.
  */
-
 export enum ItemType {
     class = 'Class',
     interface = 'Interface',

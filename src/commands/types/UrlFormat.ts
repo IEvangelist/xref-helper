@@ -6,7 +6,6 @@
  * - Custom name: Allows the user to enter a custom name.
  * @link https://review.learn.microsoft.com/en-us/help/platform/links-how-to?branch=main#display-properties
  */
-
 export enum UrlFormat {
     /**
      * Only displays the API name.
