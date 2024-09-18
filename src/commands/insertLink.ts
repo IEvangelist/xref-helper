@@ -160,6 +160,7 @@ async function createAndInsertLink(
         if (linkType === LinkType.Xref) {
             const docId = await DocIdService.getDocId(result.displayName, result.itemType as ItemType, rawUrl)
             if (!docId || token.isCancellationRequested) {
+                // TODO - can we show a status message here?
                 token.isCancellationRequested = true;
                 quickPick.dispose();
                 return;

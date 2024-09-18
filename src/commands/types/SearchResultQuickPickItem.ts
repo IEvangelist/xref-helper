@@ -18,7 +18,7 @@ export class SearchResultQuickPickItem implements QuickPickItem {
             this.itemType = result.itemType as ItemType;
             const isOverload = result.displayName.endsWith("*");
             const description = isOverload
-                ? `${result.displayName} — ${this.itemType} Overloads`
+                ? `${result.displayName} — ${this.itemType} overloads`
                 : `${result.displayName} — ${this.itemType}`;
 
             this.description = description;
@@ -29,9 +29,7 @@ export class SearchResultQuickPickItem implements QuickPickItem {
         }
 
         this.kind = result.kind ?? QuickPickItemKind.Default;
-        this.description = `${result.displayName} — ${this.itemType}`;
         this.url = result.url;
-        this.kind = result.kind ?? QuickPickItemKind.Default;
     }
 
     private getSymbolIcon(itemType: ItemType | string): string {
