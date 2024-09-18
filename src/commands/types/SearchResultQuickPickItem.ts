@@ -28,8 +28,8 @@ export class SearchResultQuickPickItem implements QuickPickItem {
             this.description = result.description;
         }
 
-        this.kind = result.kind ?? QuickPickItemKind.Default;
         this.url = result.url;
+        this.kind = result.kind ?? QuickPickItemKind.Default;
     }
 
     private getSymbolIcon(itemType: ItemType | string): string {

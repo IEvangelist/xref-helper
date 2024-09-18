@@ -24,7 +24,11 @@ export const xrefStarterAutoComplete: CompletionItemProvider = {
 
             return [
                 {
-                    command: { command: insertXrefLinkCommandName, title: "Search for API", arguments: [searchOptions]},
+                    command: {
+                        command: insertXrefLinkCommandName,
+                        title: "Search for API",
+                        arguments: [searchOptions]
+                    },
                     label: "Search for API",
                     insertText: "",
                 }

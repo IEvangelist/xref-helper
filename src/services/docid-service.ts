@@ -101,37 +101,6 @@ export class DocIdService {
                 }
             }
 
-            for (const candidate of candidates) {
-                let paramIndex = 0;
-                for (const parameter of candidate.Parameter) {
-                    // Parameter type could be System.ReadOnlySpan<System.Char>.
-                    // In this case, the displayName is System.String.Trim(ReadOnlySpan<Char>).
-                    // So we need to chop off *two* "System." prefixes.
-
-                    let xmlType = parameter.$.Type;
-                    if (xmlType.includes('<')) {
-                        const genericTypeArg = xmlType.split('<')[1].split('>')[0];
-                        const genericTypeArgNoNamespace = genericTypeArg.split('.').pop();
-                        xmlType = xmlType.replace(genericTypeArg, genericTypeArgNoNamespace);
-                    }
-
-                    if (paramTypes[paramIndex] !== xmlType.split('.').pop()) {
-                        break;
-                    }
-
-                    paramIndex++;
-                }
-
-                if (paramIndex === numParams) {
-                    // We found a match.
-                    return candidate.MemberSignature.find((x: any) => x.$.Language === 'DocId').$.Value.substring(2); // Remove the "M:" prefix.
-                }
-            }
-
-
-
-
-
             // We didn't find a matching method/constructor.
             return null;
         }

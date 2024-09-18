@@ -14,7 +14,7 @@ import { RawGitService } from "../services/raw-git-service";
 import { DocIdService } from "../services/docid-service";
 import { SearchOptions } from './types/SearchOptions';
 
-export async function insertLink(linkType: LinkType) {
+export async function insertLink(linkType: LinkType, options: SearchOptions | undefined) {
     const searchTerm = await window.showInputBox({
         title: "🔍 Search APIs",
         placeHolder: `Search for a type or member by name, for example: "SmtpClient".`,
@@ -68,7 +68,8 @@ export async function insertLink(linkType: LinkType) {
                     UrlFormat.customName,
                     searchResultSelection,
                     quickPick,
-                    true);
+                    true,
+                    options);
 
                 return;
             }
@@ -80,7 +81,9 @@ export async function insertLink(linkType: LinkType) {
                     linkType,
                     UrlFormat.default,
                     searchResultSelection,
-                    quickPick);
+                    quickPick,
+                    false,
+                    options);
 
                 return;
             }
@@ -91,7 +94,9 @@ export async function insertLink(linkType: LinkType) {
                     linkType,
                     UrlFormat.customName,
                     searchResultSelection,
-                    quickPick);
+                    quickPick,
+                    false,
+                    options);
 
                 return;
             }
@@ -113,7 +118,9 @@ export async function insertLink(linkType: LinkType) {
                 linkType,
                 urlFormat,
                 searchResultSelection!,
-                quickPick);
+                quickPick,
+                false,
+                options);
         }
     });
 
@@ -125,7 +132,8 @@ async function createAndInsertLink(
     format: UrlFormat,
     searchResultSelection: SearchResultQuickPickItem,
     quickPick: QuickPick<SearchResultQuickPickItem | QuickPickItem>,
-    isTextReplacement: boolean = false) {
+    isTextReplacement: boolean = false,
+    options: SearchOptions | undefined) {
 
     quickPick.busy = true;
 
@@ -171,7 +179,7 @@ async function createAndInsertLink(
                 .replaceAll('<', '{')
                 .replaceAll('>', '}');
 
-            url = await xrefLinkFormatter(format, encodedDocId);
+            url = await xrefLinkFormatter(format, encodedDocId, options);
         }
         else {
             url = await mdLinkFormatter(format, searchResultSelection!.result);
