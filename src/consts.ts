@@ -46,3 +46,39 @@ export const urlFormatQuickPickItems: QuickPickItem[] =
         description: 'Lets you enter custom link text. For example, "The string.Trim() method".'
     },
 ];
+
+export const urlFormatQuickPickOverloadItems: QuickPickItem[] =
+[
+    { 
+        label: `$(check) ${UrlFormat.default}`, 
+        description: 'Only displays the API name. For example, "Trim()".'
+    },
+    { 
+        label: `$(check) ${UrlFormat.default}*`, 
+        description: 'Only displays the overload API name. For example, "Trim".'
+    },
+    { 
+        label: `$(array) ${UrlFormat.fullName}`, 
+        description: 'Displays the fully qualified name. For example, "System.String.Trim()".'
+    },
+    { 
+        label: `$(array) ${UrlFormat.fullName}*`, 
+        description: 'Displays the fully qualified overload name. For example, "System.String.Trim".'
+    },
+    { 
+        label: `$(bracket-dot) ${UrlFormat.nameWithType}`, 
+        description: 'Displays the type and name in the format. For example, "String.Trim()".',
+    },
+    { 
+        label: `$(bracket-dot) ${UrlFormat.nameWithType}*`, 
+        description: 'Displays the type and name in the format for the overload. For example, "String.Trim".',
+    },
+    { 
+        label: `$(edit) ${UrlFormat.customName}`, 
+        description: 'Lets you enter custom link text. For example, "The string.Trim() method".'
+    },
+    { 
+        label: `$(edit) ${UrlFormat.customName}*`, 
+        description: 'Lets you enter custom link text for the overload. For example, "The string.Trim method".'
+    },
+];
