@@ -36,6 +36,21 @@ export class DocIdService {
                 memberName = ".ctor";
             }
 
+            // All overloads.
+            if (displayName.endsWith('*')) {
+                memberName = memberName.substring(0, memberName.length - 1);
+
+                // Match any overload and then modify the DocId.
+                const methodOrCtor = xml.Type.Members[0].Member?.find((x: any) =>
+                    x.$.MemberName === memberName &&
+                    x.MemberType[0] === memberType
+                );
+
+                const docId = methodOrCtor.MemberSignature.find((x: any) => x.$.Language === 'DocId').$.Value.substring(2);
+                // Replace the parentheses with *.
+                return docId.split('(')[0].concat('*');
+            }
+
             const paramList = displayName.split('(')[1].slice(0, -1);
             const paramTypes = paramList.length > 0 ? paramList.split(',').map(x => x.trim().split(' ')[0]) : [];
             const numParams = paramTypes.length;
@@ -61,9 +76,22 @@ export class DocIdService {
             for (const candidate of candidates) {
                 let paramIndex = 0;
                 for (const parameter of candidate.Parameters[0].Parameter) {
-                    if (paramTypes[paramIndex] !== parameter.$.Type.split('.').pop()) {
+                    let xmlType = parameter.$.Type;
+
+                    // Parameter type could be have a generic type argument.
+                    // For example: 'System.ReadOnlySpan<System.Char>'.
+                    // In this case, the parameter type to match
+                    // in the displayName is 'ReadOnlySpan<Char>'.
+                    if (xmlType.includes('<')) {
+                        const genericTypeArg = xmlType.split('<')[1].split('>')[0];
+                        // Remove the namespace of the generic type argument.
+                        xmlType = xmlType.replace(genericTypeArg, genericTypeArg.split('.').pop());
+                    }
+
+                    if (paramTypes[paramIndex] !== xmlType.split('.').pop()) {
                         break;
                     }
+
                     paramIndex++;
                 }
 
@@ -72,6 +100,37 @@ export class DocIdService {
                     return candidate.MemberSignature.find((x: any) => x.$.Language === "DocId").$.Value.substring(2);
                 }
             }
+
+            for (const candidate of candidates) {
+                let paramIndex = 0;
+                for (const parameter of candidate.Parameter) {
+                    // Parameter type could be System.ReadOnlySpan<System.Char>.
+                    // In this case, the displayName is System.String.Trim(ReadOnlySpan<Char>).
+                    // So we need to chop off *two* "System." prefixes.
+
+                    let xmlType = parameter.$.Type;
+                    if (xmlType.includes('<')) {
+                        const genericTypeArg = xmlType.split('<')[1].split('>')[0];
+                        const genericTypeArgNoNamespace = genericTypeArg.split('.').pop();
+                        xmlType = xmlType.replace(genericTypeArg, genericTypeArgNoNamespace);
+                    }
+
+                    if (paramTypes[paramIndex] !== xmlType.split('.').pop()) {
+                        break;
+                    }
+
+                    paramIndex++;
+                }
+
+                if (paramIndex === numParams) {
+                    // We found a match.
+                    return candidate.MemberSignature.find((x: any) => x.$.Language === 'DocId').$.Value.substring(2); // Remove the "M:" prefix.
+                }
+            }
+
+
+
+
 
             // We didn't find a matching method/constructor.
             return null;

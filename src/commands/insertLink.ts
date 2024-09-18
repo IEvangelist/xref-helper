@@ -14,10 +14,10 @@ import { RawGitService } from "../services/raw-git-service";
 import { DocIdService } from "../services/docid-service";
 import { SearchOptions } from './types/SearchOptions';
 
-export async function insertLink(linkType: LinkType, options: SearchOptions | undefined) {
-    const searchTerm = await window.showInputBox({        
+export async function insertLink(linkType: LinkType) {
+    const searchTerm = await window.showInputBox({
         title: "🔍 Search APIs",
-        placeHolder: `Search for a type or member by name, for example; "HttpClient".`,
+        placeHolder: `Search for a type or member by name, for example: "SmtpClient".`,
         validateInput: searchTermInputValidation
     });
 
@@ -156,15 +156,15 @@ async function createAndInsertLink(
             message: `Requesting document ID...`
         });
 
-        const docId = await DocIdService.getDocId(result.displayName, result.itemType as ItemType, rawUrl)
-        if (!docId || token.isCancellationRequested) {
-            token.isCancellationRequested = true;
-            quickPick.dispose();
-            return;
-        }
-
         let url;
         if (linkType === LinkType.Xref) {
+            const docId = await DocIdService.getDocId(result.displayName, result.itemType as ItemType, rawUrl)
+            if (!docId || token.isCancellationRequested) {
+                token.isCancellationRequested = true;
+                quickPick.dispose();
+                return;
+            }
+
             // Replace some special characters.
             const encodedDocId = docId.replaceAll('#', '%23')
                 .replaceAll('<', '{')
