@@ -139,7 +139,7 @@ async function createAndInsertLink(
         progress.report({
             message: `Requesting metadata for selection...`
         });
-        await delay(3000);
+
         const rawUrl = await RawGitService.getRawGitUrl(result.url);
         if (!rawUrl || token.isCancellationRequested) {
             token.isCancellationRequested = true;
@@ -150,7 +150,7 @@ async function createAndInsertLink(
         progress.report({
             message: `Requesting document id...`
         });
-        await delay(3000);
+
         const docId = await DocIdService.getDocId(result.displayName, result.itemType as ItemType, rawUrl)
         if (!docId || token.isCancellationRequested) {
             token.isCancellationRequested = true;
@@ -181,10 +181,6 @@ async function createAndInsertLink(
 
         quickPick.dispose();
     });
-}
-
-function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
