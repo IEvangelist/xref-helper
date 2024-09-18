@@ -9,7 +9,7 @@ export const xrefStarterAutoComplete: CompletionItemProvider = {
                                       token: CancellationToken,
                                       context: CompletionContext)
                                       : ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> {
-        
+
         const range = document.getWordRangeAtPosition(position, /<xref:/) || document.getWordRangeAtPosition(position, /\(xref:/);
 
         if (range) {
@@ -41,19 +41,19 @@ export const xrefDisplayTypeAutoComplete: CompletionItemProvider = {
                                       token: CancellationToken,
                                       context: CompletionContext)
                                       : ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> {
-        
+
         const range = document.getWordRangeAtPosition(position, /<xref:[^\s>]+>/);
 
         if (range) {
 
             // Get the full name sans trailing * for overloads
             let fullName = document.getText(range).replace('%2A', '').replace('*', '');
-            
+
             // Trim off the ending regex result of ?>
             fullName = fullName.substring(6, fullName.length - 2);
-            
+
             let nameWithType = fullName;
-            
+
             // If the full name has method () trim it down to (...) for display
             if (nameWithType.indexOf('(') !== -1) {
                 nameWithType = `${nameWithType.substring(0, nameWithType.indexOf('('))}(…)`;
@@ -73,7 +73,7 @@ export const xrefDisplayTypeAutoComplete: CompletionItemProvider = {
                     kind: CompletionItemKind.Unit
                 },
                 {
-                    label: 'Type with name',
+                    label: 'Name with type',
                     insertText: 'displayProperty=nameWithType',
                     detail: nameWithType,
                     kind: CompletionItemKind.Unit
