@@ -15,7 +15,6 @@ export const mdLinkFormatter = async (
     urlFormat: UrlFormat,
     searchResult: SearchResult): Promise<string | undefined> => {
 
-    const displayName = searchResult.displayName.replaceAll('<', "\<");
     const url = searchResult.url;
 
     switch (urlFormat) {
