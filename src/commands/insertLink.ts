@@ -148,7 +148,7 @@ async function createAndInsertLink(
         }
 
         progress.report({
-            message: `Requesting document id...`
+            message: `Requesting document ID...`
         });
 
         const docId = await DocIdService.getDocId(result.displayName, result.itemType as ItemType, rawUrl)
