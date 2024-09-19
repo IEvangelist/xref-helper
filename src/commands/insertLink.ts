@@ -9,7 +9,7 @@ import { window, QuickPickItem, QuickPick, ProgressLocation } from "vscode";
 import { xrefLinkFormatter } from "./formatters/xrefLinkFormatter";
 import { SearchResult } from "./types/SearchResult";
 import { getUserSelectedText, replaceUserSelectedText, searchTermInputValidation } from "../utils";
-import { tooManyResults, urlFormatQuickPickItems } from "../consts";
+import { allUrlFormatQuickPickItems, tooManyResults, urlFormatQuickPickItems } from "../consts";
 import { RawGitService } from "../services/raw-git-service";
 import { DocIdService } from "../services/docid-service";
 import { SearchOptions } from './types/SearchOptions';
@@ -68,21 +68,22 @@ export async function insertLink(linkType: LinkType, options: SearchOptions | un
                     UrlFormat.customName,
                     searchResultSelection,
                     quickPick,
-                    true,
-                    options);
+                    options,
+                    true);
 
                 return;
             }
 
-            // When the user selects a namespace, create a link using the default format.
+            // When the user selects a namespace (or we're configured to skip),
+            // create a link using the default format.
             // Namespaces are always displayed as fully qualified names.
-            if (searchResultSelection.itemType === ItemType.namespace) {
+            if (searchResultSelection.itemType === ItemType.namespace ||
+                options && options.skipDisplayStyle === true) {
                 await createAndInsertLink(
                     linkType,
                     UrlFormat.default,
                     searchResultSelection,
                     quickPick,
-                    false,
                     options);
 
                 return;
@@ -95,14 +96,16 @@ export async function insertLink(linkType: LinkType, options: SearchOptions | un
                     UrlFormat.customName,
                     searchResultSelection,
                     quickPick,
-                    false,
                     options);
 
                 return;
             }
 
             // If we make it here, the user will now be prompted to select the URL format.
-            quickPick.items = urlFormatQuickPickItems;
+            quickPick.items = options && options.hideCustomDisplayStyle === true
+                ? urlFormatQuickPickItems
+                : allUrlFormatQuickPickItems;
+
             quickPick.title = '🔗 Select URL format';
             quickPick.value = ''; // Remove user text filtering...
             quickPick.placeholder = 'Select the format of the URL to insert.';
@@ -119,7 +122,6 @@ export async function insertLink(linkType: LinkType, options: SearchOptions | un
                 urlFormat,
                 searchResultSelection!,
                 quickPick,
-                false,
                 options);
         }
     });
@@ -132,8 +134,8 @@ async function createAndInsertLink(
     format: UrlFormat,
     searchResultSelection: SearchResultQuickPickItem,
     quickPick: QuickPick<SearchResultQuickPickItem | QuickPickItem>,
-    isTextReplacement: boolean = false,
-    options: SearchOptions | undefined) {
+    options: SearchOptions | undefined = undefined,
+    isTextReplacement: boolean = false) {
 
     quickPick.busy = true;
 
@@ -182,7 +184,7 @@ async function createAndInsertLink(
             url = await xrefLinkFormatter(format, encodedDocId, options);
         }
         else {
-            url = await mdLinkFormatter(format, searchResultSelection!.result);
+            url = await mdLinkFormatter(format, searchResultSelection!.result, options);
         }
 
         // Insert the URL into the active text editor

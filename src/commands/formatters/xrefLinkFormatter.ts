@@ -1,7 +1,7 @@
 import { window } from "vscode";
 import { UrlFormat } from "../types/UrlFormat";
 import { getUserSelectedText } from "../../utils";
-import { SearchOptions } from '../types/SearchOptions';
+import { SearchOptions } from "../types/SearchOptions";
 
 /**
  * When XREF links are enabled, the URL should be in the format:
@@ -19,29 +19,22 @@ export const xrefLinkFormatter = async (
     switch (urlFormat) {
         // Displays the API name:
         //   <xref:System.Net.Mail.SmtpClient>
-        case UrlFormat.default: {
-            if (options?.SkipBrackets) {
-                return `${uid}`;
-            } else {
-                return `<xref:${uid}>`;
-            }
-        }
+        case UrlFormat.default:
+            return options && options.skipBrackets === true
+                ? uid
+                : `<xref:${uid}>`;
 
         // Displays the fully qualified name:
         //   <xref:System.Net.Mail.SmtpClient?displayProperty=fullName>
         case UrlFormat.fullName:
-            if (options?.SkipBrackets) {
-                return `${uid}?displayProperty=fullName`;
-            } else {
-                return `<xref:${uid}?displayProperty=fullName>`;
-            }
+            return options && options.skipBrackets === true
+                ? `${uid}?displayProperty=fullName`
+                : `<xref:${uid}?displayProperty=fullName>`;
 
         case UrlFormat.nameWithType:
-            if (options?.SkipBrackets) {
-                return `${uid}?displayProperty=nameWithType`;
-            } else {
-                return `<xref:${uid}?displayProperty=nameWithType>`;
-            }
+            return options && options.skipBrackets === true
+                ? `${uid}?displayProperty=nameWithType`
+                : `<xref:${uid}?displayProperty=nameWithType>`;
 
         case UrlFormat.customName:
             {

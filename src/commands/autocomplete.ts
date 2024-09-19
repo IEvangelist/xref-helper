@@ -1,36 +1,37 @@
 import { CancellationToken, Position, ProviderResult, TextDocument, CompletionItemProvider, CompletionContext, CompletionItem, CompletionList, CompletionItemKind } from "vscode";
 import { insertXrefLinkCommandName } from '../consts';
-import { UrlFormat } from './types/UrlFormat';
 import { SearchOptions } from './types/SearchOptions';
 
 export const xrefStarterAutoComplete: CompletionItemProvider = {
-    provideCompletionItems: function (document: TextDocument,
-                                      position: Position,
-                                      token: CancellationToken,
-                                      context: CompletionContext)
-                                      : ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> {
+    provideCompletionItems: (
+        document: TextDocument,
+        position: Position,
+        token: CancellationToken,
+        context: CompletionContext): ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> => {
 
-        const range = document.getWordRangeAtPosition(position, /<xref:/) || document.getWordRangeAtPosition(position, /\(xref:/);
+        const range = document.getWordRangeAtPosition(position, /<xref:/)
+            || document.getWordRangeAtPosition(position, /\(xref:/);
 
         if (range) {
 
             const text = document.getText(range);
 
-            const searchOptions : SearchOptions = {
-                SkipBrackets: true,
-                SkipDisplayStyle: text.startsWith('('),
-                HideCustomDisplayStyle: text.startsWith('<')
+            const searchOptions: SearchOptions = {
+                skipBrackets: true,
+                skipDisplayStyle: text.startsWith('('),
+                hideCustomDisplayStyle: text.startsWith('<')
             };
 
             return [
                 {
                     command: {
                         command: insertXrefLinkCommandName,
-                        title: "Search for API",
+                        title: "🔍 Search APIs",
                         arguments: [searchOptions]
                     },
-                    label: "Search for API",
+                    label: " — Search APIs...",
                     insertText: "",
+                    kind: CompletionItemKind.Text,
                 }
             ];
         }
@@ -40,14 +41,13 @@ export const xrefStarterAutoComplete: CompletionItemProvider = {
 }
 
 export const xrefDisplayTypeAutoComplete: CompletionItemProvider = {
-    provideCompletionItems: function (document: TextDocument,
-                                      position: Position,
-                                      token: CancellationToken,
-                                      context: CompletionContext)
-                                      : ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> {
+    provideCompletionItems: (
+        document: TextDocument,
+        position: Position,
+        token: CancellationToken,
+        context: CompletionContext): ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> => {
 
         const range = document.getWordRangeAtPosition(position, /<xref:[^\s>]+>/);
-
         if (range) {
 
             // Get the full name sans trailing * for overloads
@@ -71,16 +71,14 @@ export const xrefDisplayTypeAutoComplete: CompletionItemProvider = {
 
             return [
                 {
-                    label: 'Full name',
+                    label: '$(array) Full name',
                     insertText: 'displayProperty=fullName',
-                    detail: fullName,
-                    kind: CompletionItemKind.Unit
+                    detail: fullName
                 },
                 {
-                    label: 'Name with type',
+                    label: '$(bracket-dot) Name with type',
                     insertText: 'displayProperty=nameWithType',
-                    detail: nameWithType,
-                    kind: CompletionItemKind.Unit
+                    detail: nameWithType
                 },
             ];
         }
