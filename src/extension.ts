@@ -30,9 +30,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerCompletionItemProvider('markdown', xrefDisplayTypeAutoComplete, '?'),
     // vscode.languages.registerInlineCompletionItemProvider('markdown', xrefInlineAutoComplete),
 
-    vscode.languages.registerCodeActionsProvider('markdown', new DisplayPropertyChanger(), {
-      providedCodeActionKinds: [vscode.CodeActionKind.QuickFix]
-    })
+    // vscode.languages.registerCodeActionsProvider('markdown', new DisplayPropertyChanger(), {
+    //   providedCodeActionKinds: [vscode.CodeActionKind.QuickFix]
+    // })
   );
 }
 
