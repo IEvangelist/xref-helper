@@ -38,7 +38,9 @@ export class DocIdService {
 
             // All overloads.
             if (displayName.endsWith('*')) {
-                memberName = memberName.substring(0, memberName.length - 1);
+                if (apiType === ItemType.method) {
+                    memberName = memberName.substring(0, memberName.length - 1);
+                }
 
                 // Match any overload and then modify the DocId.
                 const methodOrCtor = xml.Type.Members[0].Member?.find((x: any) =>
