@@ -14,9 +14,7 @@ export const xrefStarterAutoComplete: CompletionItemProvider = {
         token: CancellationToken,
         context: CompletionContext): ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> => {
 
-        const range = document.getWordRangeAtPosition(position, /<xref:/)
-            || document.getWordRangeAtPosition(position, /\(xref:/);
-
+        const range = document.getWordRangeAtPosition(position, /[<(]xref:/);
         if (range) {
 
             const text = document.getText(range);
@@ -166,31 +164,35 @@ export class DisplayPropertyChanger implements CodeActionProvider {
 
         const line = document.lineAt(range.start.line);
         const text = line.text;
-        const match = text.match(/xref:.+\?displayProperty=(\w+)/);
+        const match = text.match(/<xref:.+\?displayProperty=(\w+)>/);
         if (match) {
             const displayProperty = match[1];
 
-            return displayProperty === 'fullName'
-                ? [
-                    this.createFix(
+            return [
+                displayProperty === 'fullName'
+                    ? this.createFix(
                         document,
                         range,
                         '?displayProperty=nameWithType',
-                        'Format as name with type')
-                ]
-                : [
-                    this.createFix(
+                        'Format as name with type, i.e.; "String.Trim()".')
+
+                    : this.createFix(
                         document,
                         range,
                         '?displayProperty=fullName',
-                        'Format as full name')
-                ];
+                        'Format as full name, i.e.; "System.String.Trim()".')
+            ];
         }
 
         return undefined;
     }
 
-    private createFix(document: TextDocument, range: Range, newText: string, title: string): CodeAction {
+    private createFix(
+        document: TextDocument,
+        range: Range,
+        newText: string,
+        title: string): CodeAction {
+
         const action = new CodeAction(title);
         action.edit = new WorkspaceEdit();
         const targetRange = this.getReplacementRange(document, range);
@@ -200,12 +202,22 @@ export class DisplayPropertyChanger implements CodeActionProvider {
     }
 
     private getReplacementRange(document: TextDocument, range: Range): Range {
-        const line = document.lineAt(range.start.line);
-        const regex = /xref:.+(\?displayProperty=.+)>/;
-        const match = line.text.match(regex);
-        if (match) {
-            const start = range.start.translate(0, match.index);
-            const end = start.translate(0, match[1].length);
+        // targetRange:
+        //   <xref:System.Net.Mail.SmtpClient.Port?displayProperty=fullName>
+        const targetRange = document.getWordRangeAtPosition(
+            range.start, /<xref:.+\?displayProperty=.+>/);
+
+        const text = document.getText(targetRange);
+        const match = text.match(/(<xref:.+)(\?displayProperty=.+>)/);
+        // match:
+        //   0 <xref:System.Net.Mail.SmtpClient.Port?displayProperty=fullName>
+        //   1 <xref:System.Net.Mail.SmtpClient.Port
+        //   2 ?displayProperty=fullName>
+
+        if (targetRange && match) {
+            const start = targetRange.start.translate(0, match[1].length);
+            const end = targetRange.end.translate(0, -1);
+
             return new Range(start, end);
         }
 
