@@ -1,6 +1,6 @@
 # 🔗 API Reference Link Helper
 
-This extension is primarily used to help developers quickly find and navigate to the official Microsoft API reference documentation for .NET types and members. It uses the [Microsoft Learn API Browser](https://learn.microsoft.com/api/apibrowser/dotnet/search) to search for the requested type or member. It exposes the ability to insert a markdown link to the documentation in the active editor. It supports `<xref:uid>` format, `?displayProperty` editing and quick management of API links.
+This extension helps content developers quickly insert and edit xref links to the official Microsoft API reference documentation for .NET types and members. It uses the [Microsoft Learn API Browser](https://learn.microsoft.com/api/apibrowser/dotnet/search) to search for a requested type or member. It exposes the ability to insert a markdown link to the markdown file open in the active editor. It supports the creation of links that display only the type or member name in the link text, type name with member name, fully qualified name, or custom text.
 
 ## Getting Started
 
@@ -8,14 +8,14 @@ To install the extension, download the [latest _xref-helper.vsix_](https://githu
 
 ## Features
 
-The following URL formats are supported, given the example `System.String.Format` method when selecting the overloads option:
+The following URL formats are supported, given the example `System.String.Format` method when selecting the [overloads option](#overloads-option) and **Method overloads** search result:
 
 | Format | Resulting Markdown | Example HTML |
 |--|--|--|
 | Default | `<xref:System.String.Format*>` | `<a href="https://docs.microsoft.com/dotnet/api/system.string.format">Format</a>` |
 | Full name | `<xref:System.String.Format*?displayProperty=fullName>` | `<a href="https://docs.microsoft.com/dotnet/api/system.string.format">System.String.Format</a>` |
 | Name with type | `<xref:System.String.Format*?displayProperty=nameWithType>` | `<a href="https://docs.microsoft.com/dotnet/api/system.string.format">String.Format</a>` |
-| Custom name | `[The string.Format method](xref:System.String.Format*)` | `<a href="https://docs.microsoft.com/dotnet/api/system.string.format">The string.Format method</a>` |
+| Custom link text | `[The string.Format method](xref:System.String.Format*)` | `<a href="https://docs.microsoft.com/dotnet/api/system.string.format">The string.Format method</a>` |
 
 _Command pallette commands:_
 
@@ -77,7 +77,7 @@ In Visual Studio Code settings, search for `"XREF Helper"` (or paste this filter
 | Setting | Description | Default |
 |--|--|--|
 | **Xref Helper: Api Url** <br/> `xref-helper.apiUrl` | The URL to use when searching for XREFs. (Defaults to the .NET API search URL.) | `https://learn.microsoft.com/api/apibrowser/dotnet/search` |
-| **Xref Helper: Append Overloads** <br/> `xref-helper.appendOverloads` | Whether to append overloads to the search results. Applies to methods and constructors. | `true` |
+| <a name="overloads-option" />**Xref Helper: Append Overloads** <br/> `xref-helper.appendOverloads` | Whether to append overloads to the search results. Applies to methods and constructors. | `true` |
 | **Xref Helper: Query String Parameters** <br/> `xref-helper.queryStringParameters` | The query string parameters to include when searching for XREFs. | `[ { "name": "api-version", "value": "0.2" }, { "name": "locale", "value": "en-us" } ]` |
 
 ![Settings Screenshot](images/settings.png)
