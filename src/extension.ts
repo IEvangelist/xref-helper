@@ -4,9 +4,10 @@ import * as vscode from 'vscode';
 import { insertLink } from './commands/insertLink';
 import { insertApiRefLinkCommandName, insertXrefLinkCommandName, transformXrefToOtherCommandName, toolName } from './consts';
 import { LinkType } from './commands/types/LinkType';
-import { xrefStarterAutoComplete, xrefDisplayTypeAutoComplete, xrefInlineAutoComplete, DisplayPropertyChanger } from './commands/autocomplete';
+import { xrefStarterAutoComplete, xrefDisplayTypeAutoComplete } from './commands/autocomplete';
 import { SearchOptions } from './commands/types/SearchOptions';
 import { transformXrefToOther } from './commands/transform';
+import { DisplayPropertyChanger } from './commands/quickaction';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed

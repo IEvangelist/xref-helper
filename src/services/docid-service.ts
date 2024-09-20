@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import { parseStringPromise } from "xml2js";
 import { ItemType } from "../commands/types/ItemType";
+import { window } from "vscode";
 
 export class DocIdService {
     public static async getDocId(displayName: string, apiType: ItemType, gitUrl: string): Promise<string | null> {
@@ -15,7 +16,14 @@ export class DocIdService {
                 "Content-Type": "application/xml",
             }
         });
+
         if (!response.ok) {
+
+            if (response.status === 404) {
+                window.showErrorMessage(
+                    `404: Unable to retrieve xref metadata for "${displayName}". When this happens, it's usually because the GitHub repo for the API docs is private.`);
+            }
+
             return null;
         }
 
