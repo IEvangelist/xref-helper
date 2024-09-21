@@ -2,6 +2,36 @@
 
 This extension helps content developers quickly insert and edit xref links to the official Microsoft API reference documentation for .NET types and members. It uses the [Microsoft Learn API Browser](https://learn.microsoft.com/api/apibrowser/dotnet/search) to search for a requested type or member. It exposes the ability to insert a markdown link to the markdown file open in the active editor. It supports the creation of links that display only the type or member name in the link text, type name with member name, fully qualified name, or custom text.
 
+## Example Usage
+
+Open the command palette <kbd>F1</kbd> and search for **Insert XREF Link**. Select the command, and when prompted, enter the type or member name you want to link to.
+
+![Insert XREF link](images/command-pallette-insert-xref.png)
+
+### Search validations
+
+After you start typing, if you delete the text, there's a validation error that will appear. The extension will not allow you to insert an empty search term:
+
+![Empty](images/command-pallette-insert-xref-validation-empty.png)
+
+The search term cannot contain spaces:
+
+![Spaces](images/command-pallette-insert-xref-validation-space.png)
+
+The search term must include opening and closing bracket pairs:
+
+![Brackets](images/command-pallette-insert-xref-validation-brackets.png)
+
+After a valid search term is entered, the extension searches for the configured API and displays the most relevant results.
+
+![Results](images/command-pallette-insert-xref-results.png)
+
+Once you select a result, you're prompted to choose the format of the link you want to insert.
+
+![URL formats](images/command-pallette-insert-xref-all-formats.png)
+
+Finally, the extension inserts the selected link format into the active editor.
+
 ## Getting Started
 
 To install the extension, download the [latest _xref-helper.vsix_](https://github.com/IEvangelist/xref-helper/blob/main/dist/xref-helper.vsix) file from the _.dist/_ folder, and from Visual Studio Code, right-click the file and select _Install Extension VSIX_.
@@ -35,36 +65,6 @@ _Code actions:_
 _Context menu commands:_
 
 - **Convert XREF Link**: When a full `xref` link is selected, a context menu command is available to convert the link between `[](xref:)` and `<xref:>`.
-
-## Example Usage
-
-Open the command palette <kbd>F1</kbd> and search for **Insert XREF Link**. Select the command, and when prompted, enter the type or member name you want to link to.
-
-![Insert XREF link](images/command-pallette-insert-xref.png)
-
-### Search validations
-
-After you start typing, if you delete the text, there's a validation error that will appear. The extension will not allow you to insert an empty search term:
-
-![Empty](images/command-pallette-insert-xref-validation-empty.png)
-
-The search term cannot contain spaces:
-
-![Spaces](images/command-pallette-insert-xref-validation-space.png)
-
-The search term must include opening and closing bracket pairs:
-
-![Brackets](images/command-pallette-insert-xref-validation-brackets.png)
-
-After a valid search term is entered, the extension searches for the configured API and displays the most relevant results.
-
-![Results](images/command-pallette-insert-xref-results.png)
-
-Once you select a result, you're prompted to choose the format of the link you want to insert.
-
-![URL formats](images/command-pallette-insert-xref-all-formats.png)
-
-Finally, the extension inserts the selected link format into the active editor.
 
 ## Requirements
 
