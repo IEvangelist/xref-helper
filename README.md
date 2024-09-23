@@ -59,7 +59,7 @@ _Context menu commands:_
 
 - **Convert XREF Link**: When a full `xref` link is selected, a context menu command is available to convert the link between `[](xref:)` and `<xref:>`.
 
-### Search validations
+## Search validations
 
 After you start typing, if you delete the text, there's a validation error that will appear. The extension doesn't allow you to insert an empty search term:
 
