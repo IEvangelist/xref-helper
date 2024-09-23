@@ -11,19 +11,23 @@ This handy-dandy extension helps content developers quickly insert and edit [cro
 
 ## Example usage
 
-Open the command palette <kbd>F1</kbd> and search for **Insert XREF Link**. Select the command, and when prompted, enter the type or member name you want to link to.
+1. With your cursor positioned where you want the link to be inserted in your document, open the command palette <kbd>F1</kbd> and search for **Insert XREF Link**.
+2. Select the command, and when prompted, enter the type or member name you want to link to.
 
-![Insert XREF link](images/command-pallette-insert-xref.png)
+   ![Insert XREF link](images/command-pallette-insert-xref.png)
 
-After a valid search term is entered, the extension searches for the configured API and displays the most relevant results.
+3. After a valid search term is entered, the extension searches for the configured API and displays the most relevant results.
 
-![Results](images/command-pallette-insert-xref-results.png)
+   ![Results](images/command-pallette-insert-xref-results.png)
 
-Once you select a result, you're prompted to choose the format of the link you want to insert.
+4. Once you select a result, you're prompted to choose the format of the link you want to insert.
 
-![URL formats](images/command-pallette-insert-xref-all-formats.png)
+   ![URL formats](images/command-pallette-insert-xref-all-formats.png)
 
-Finally, the extension inserts the selected link format into the active editor.
+   The extension inserts the selected link format into the active editor.
+
+> [!TIP]
+> You can also preselect text that you want converted to an xref hyperlink before you select the command. In this case, whatever text you selected is used as the link text. Nifty!
 
 ## Get started
 
