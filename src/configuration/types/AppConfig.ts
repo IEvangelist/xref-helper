@@ -28,8 +28,9 @@ export class AppConfig {
     appendOverloads: boolean | undefined = true;
 
     /**
-     * Whether to allow GitHub session to be used for API requests.
-     * Enables scenarios where XREF metadata is in a private GitHub repo.
+     * Whether to prompt the user for GitHub auth to allow the GitHub
+     * session to be used for API requests. Enables scenarios where XREF
+     * metadata is in a private GitHub repo.
      * - When enabled, the GitHub session is used to authenticate the API requests.
      * @default false
      */
