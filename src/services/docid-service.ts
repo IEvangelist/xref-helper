@@ -287,7 +287,7 @@ function splitParamList(input: string): string[] {
 
 function simplifyGenericType(input: string): string {
     // Regular expression to match the type and its generic parameters
-    const regex = /(\w+)<([^>]+)>/;
+    const regex = /(\w+)<([^>]+)>(\[?\]?)/;
     const match = input.match(regex);
 
     if (!match) {
@@ -299,8 +299,9 @@ function simplifyGenericType(input: string): string {
         .split(',')
         .map(param => param.trim().split('.').pop())
         .join(',');
+    const brackets = match.length > 3 ? match[3] : '';
 
-    return `${typeName}<${genericParams}>`;
+    return `${typeName}<${genericParams}>${brackets}`;
 }
 
 async function parseYaml(text: string, displayName: string, apiType: ItemType, gitUrl: string): Promise<DocIdResult> {
