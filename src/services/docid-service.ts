@@ -131,8 +131,6 @@ async function parseXml(text: string, displayName: string, apiType: ItemType, gi
         }
 
         const paramList = displayName.split('(')[1].slice(0, -1);
-        // Need to handle paramList = 'Action<WebHostBuilderContext,IConfigurationBuilder>'
-        //const paramTypes = paramList.length > 0 ? paramList.split(',').map(x => x.trim().split(' ')[0]) : [];
         const paramTypes = splitParamList(paramList);
         const numParams = paramTypes.length;
 
@@ -166,9 +164,7 @@ async function parseXml(text: string, displayName: string, apiType: ItemType, gi
                 // in the displayName is 'ReadOnlySpan<Char>' or
                 // 'Action<HostBuilderContext,IConfigurationBuilder>' respectively.
                 if (xmlType.includes('<')) {
-                    //const genericTypeArg = xmlType.split('<')[1].split('>')[0];
-                    // Remove the namespace of the generic type argument.
-                    //xmlType = xmlType.replace(genericTypeArg, genericTypeArg.split('.').pop());
+                    // Remove the namespaces.
                     xmlType = simplifyGenericType(xmlType)
                 }
 
@@ -285,6 +281,7 @@ function splitParamList(input: string): string[] {
     return result;
 }
 
+// Removes namespaces from type and type arguments.
 function simplifyGenericType(input: string): string {
     // Regular expression to match the type and its generic parameters
     const regex = /(\w+)<([^>]+)>(\[?\]?)/;
