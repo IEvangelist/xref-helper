@@ -131,7 +131,9 @@ async function parseXml(text: string, displayName: string, apiType: ItemType, gi
         }
 
         const paramList = displayName.split('(')[1].slice(0, -1);
-        const paramTypes = paramList.length > 0 ? paramList.split(',').map(x => x.trim().split(' ')[0]) : [];
+        // Need to handle paramList = 'Action<WebHostBuilderContext,IConfigurationBuilder>'
+        //const paramTypes = paramList.length > 0 ? paramList.split(',').map(x => x.trim().split(' ')[0]) : [];
+        const paramTypes = splitParamList(paramList);
         const numParams = paramTypes.length;
 
         // No parameters.
@@ -158,13 +160,16 @@ async function parseXml(text: string, displayName: string, apiType: ItemType, gi
                 let xmlType = parameter.$.Type;
 
                 // Parameter type could be have a generic type argument.
-                // For example: 'System.ReadOnlySpan<System.Char>'.
+                // For example: 'System.ReadOnlySpan<System.Char>' or
+                // 'System.Action<Microsoft.Extensions.Hosting.HostBuilderContext,Microsoft.Extensions.Configuration.IConfigurationBuilder>'.
                 // In this case, the parameter type to match
-                // in the displayName is 'ReadOnlySpan<Char>'.
+                // in the displayName is 'ReadOnlySpan<Char>' or
+                // 'Action<HostBuilderContext,IConfigurationBuilder>' respectively.
                 if (xmlType.includes('<')) {
-                    const genericTypeArg = xmlType.split('<')[1].split('>')[0];
+                    //const genericTypeArg = xmlType.split('<')[1].split('>')[0];
                     // Remove the namespace of the generic type argument.
-                    xmlType = xmlType.replace(genericTypeArg, genericTypeArg.split('.').pop());
+                    //xmlType = xmlType.replace(genericTypeArg, genericTypeArg.split('.').pop());
+                    xmlType = simplifyGenericType(xmlType)
                 }
 
                 if (paramTypes[paramIndex] !== xmlType.split('.').pop()) {
@@ -251,6 +256,53 @@ async function parseXml(text: string, displayName: string, apiType: ItemType, gi
     };
 }
 
+// Splits the param list into individual parameters.
+function splitParamList(input: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let depth = 0;
+
+    for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+
+        if (char === '<') {
+            depth++;
+        } else if (char === '>') {
+            depth--;
+        } else if (char === ',' && depth === 0) {
+            result.push(current.trim());
+            current = '';
+            continue;
+        }
+
+        current += char;
+    }
+
+    if (current) {
+        result.push(current.trim());
+    }
+
+    return result;
+}
+
+function simplifyGenericType(input: string): string {
+    // Regular expression to match the type and its generic parameters
+    const regex = /(\w+)<([^>]+)>/;
+    const match = input.match(regex);
+
+    if (!match) {
+        return input;
+    }
+
+    const typeName = match[1];
+    const genericParams = match[2]
+        .split(',')
+        .map(param => param.trim().split('.').pop())
+        .join(',');
+
+    return `${typeName}<${genericParams}>`;
+}
+
 async function parseYaml(text: string, displayName: string, apiType: ItemType, gitUrl: string): Promise<DocIdResult> {
     if (apiType === ItemType.package || apiType === ItemType.module || apiType === ItemType.typeAlias) {
         return { docId: displayName };
@@ -307,9 +359,9 @@ async function parseYaml(text: string, displayName: string, apiType: ItemType, g
         }
     }
 
-    if (apiType === ItemType.class || 
-        apiType === ItemType.struct || 
-        apiType === ItemType.interface || 
+    if (apiType === ItemType.class ||
+        apiType === ItemType.struct ||
+        apiType === ItemType.interface ||
         apiType === ItemType.enum) {
         uid = yml.uid;
     }
