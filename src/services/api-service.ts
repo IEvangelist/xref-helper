@@ -29,7 +29,6 @@ export class ApiService {
             // Create the quick pick items.
             const apiQuickPickItems = enabledApis.map(api => {
                 // @ts-ignore
-                //const apiDisplayName = ApiName[api.name];
 
                 return {
                     label: `${getSymbolIcon(api.displayName)} ${api.displayName}`,
