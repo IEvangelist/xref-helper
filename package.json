@@ -1,6 +1,5 @@
 {
   "name": "xref-helper",
-  "displayName": "API Reference Link Helper",
   "description": "A Visual Studio Code extension to help you quickly insert API reference (xref) links.",
   "version": "1.0.15",
   "engines": {
@@ -10,16 +9,35 @@
   "categories": [
     "Other",
     "Extension Packs",
-    "Formatters"
+    "Formatters",
+    "AI",
+    "Chat",
+    "Programming Languages"
   ],
   "preview": true,
   "activationEvents": [
     "onLanguage:markdown",
-    "onLanguage:xml"
+    "onLanguage:xml",
+    "onChatParticipant:participantId:article-helper"
   ],
   "icon": "images/icon.png",
   "main": "./out/extension.js",
   "contributes": {
+    "chatParticipants": [
+      {
+        "id": "article-helper",
+        "name": "articles",
+        "fullName": "API Reference Link Helper",
+        "description": "A Visual Studio Code extension to help you quickly insert API reference (xref) links.",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "templateArticle",
+            "description": "Mimic a source article's layout, style, tone, and voice, and generate a new article based on specific content."
+          }
+        ]
+      }
+    ],
     "commands": [
       {
         "command": "xrefHelper.insertXrefLink",
