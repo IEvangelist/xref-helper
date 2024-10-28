@@ -18,7 +18,7 @@
   "activationEvents": [
     "onLanguage:markdown",
     "onLanguage:xml",
-    "onChatParticipant:participantId:article-helper"
+    "onChatParticipant:participantId:learn"
   ],
   "icon": "images/icon.png",
   "main": "./out/extension.js",
