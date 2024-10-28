@@ -90,15 +90,15 @@ export function getBreakingChangePrompt(issue: Issue): string {
     - h2: Version introduced
       A single phrase, such as .NET Aspire 9.0 GA.
     - h2: Previous behavior
-      A brief description of the behavior before the change.
+      A brief description of the behavior before the change, including a code snippet if applicable.
     - h2: New behavior
-      A brief description of the behavior after the change.
+      A brief description of the behavior after the change, including a code snippet if applicable.
     - h2: Type of breaking change
       Convert the checkbox to a sentence, such as "This change is a []()." where the link points to the appropriate category in the categories.md file.
     - h2: Recommended action
-      A brief description of the action that users should take
+      A brief description of the action or actions that users should take, including code snippets if applicable.
     - h2: Affected APIs
-      A list of APIs that are affected by the change. If there are no affected APIs (or "No response") write "None.".
+      A list of APIs, in xref format, that are affected by the change. If there are no affected APIs (or "No response") write "None.".
 
     Always reply with Markdown. Use active voice, and write in the present tense. When writing the Reason for the change section, write it in this format: "This change is a [sentence case name](../categories.md#book-mark).`;
 }   
