@@ -100,5 +100,5 @@ export function getBreakingChangePrompt(issue: Issue): string {
     - h2: Affected APIs
       A list of APIs, in xref format, that are affected by the change. If there are no affected APIs (or "No response") write "None.".
 
-    Always reply with Markdown. Use active voice, and write in the present tense. When writing the Reason for the change section, write it in this format: "This change is a [sentence case name](../categories.md#book-mark).`;
+    Always reply with Markdown. Use active voice and write in the present tense. When writing the 'Type of breaking change' section, write it in this format: "This change is a [sentence case name](../categories.md#book-mark).`;
 }   
