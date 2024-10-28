@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   const aiHelper = vscode.chat.createChatParticipant(
-    'article-helper', chatRequestHandler);
+    'learn', chatRequestHandler);
 
   aiHelper.onDidReceiveFeedback(feedback => {
     console.log(`Received feedback: ${feedback}`);

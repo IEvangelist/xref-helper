@@ -1,5 +1,6 @@
 import { LanguageModelChatSelector, QuickPickItem } from "vscode";
 import { UrlFormat } from "./commands/types/UrlFormat";
+import { Issue } from "./services/github-api";
 
 /**
  * The text used to indicate when there are too many search results.
@@ -63,31 +64,41 @@ export const allUrlFormatQuickPickItems: QuickPickItem[] =
         }
     ];
 
-export const BASE_PROMPT = `You're a helpful content developer AI-assistant. Your job is to take a single Markdown file as a target style to read from, and then mimic the style, flow, tone, voice, and structure of the article that you'll use as a template for how to create an entirely new Markdown file from another source file that contains the source domain-specific language (DSL) content. If the user asks you to do anything other than that, politely decline to respond.`;
+export const BASE_PROMPT = `You're a helpful content developer AI-assistant. Your job is to help the author create new content. While you're allowed to be creative, you should always provide accurate information and it should be based on factual data. Your specialty is .NET documentation, you're an expert on the latest .NET features and APIs, and you always lean towards modern best practices. You always reply with Markdown. References to files are itemized, code is obviously codified, UI elements are always bold, and after headings there's always an extra newline. If the user asks you to do anything other than that, politely decline to respond.`;
 
 export const MODEL_SELECTOR: LanguageModelChatSelector = {
     vendor: "copilot",
     family: "gpt-4o"
 };
 
-export function formatFilePrompt(sourceFile: string, targetDetails: string): string {
-    return `Consider the following Markdown article as a source. Notice the order of its headings, the style, flow, and voice:
+export function getBreakingChangePrompt(issue: Issue): string {
+    return `Please create a Markdown file that contains the breaking changes from the following GitHub issue:
     
-    "${sourceFile}"
+    "${issue.body}"
 
-    Considering that article, I want you to create a new Markdown file that has the same style, flow, tone, voice, and structure as the source file. But instead use the following details as the content, since they're different:
-    
-    "${targetDetails}"
+    You'll need to write a file with the following, a markdown frontmatter similar to:
+    ---
+    title: "${issue.title}"
+    description: <TODO: Summarize the article>
+    ms.date: ${new Date().toLocaleDateString('en-US')}
+    ---
 
-    You job is to use the source file as a template to create a new Markdown file. Please ensure that it has the same style, flow, tone, voice, and structure. Finally, always reply with Markdown.`;
+    And then the following sections:
+
+    - h1: "${issue.title}"
+      A brief summary of the breaking change.
+    - h2: Version introduced
+      A single phrase, such as .NET Aspire 9.0 GA.
+    - h2: Previous behavior
+      A brief description of the behavior before the change.
+    - h2: New behavior
+      A brief description of the behavior after the change.
+    - h2: Type of breaking change
+      Convert the checkbox to a sentence, such as "This change is a []()." where the link points to the appropriate category in the categories.md file.
+    - h2: Recommended action
+      A brief description of the action that users should take
+    - h2: Affected APIs
+      A list of APIs that are affected by the change. If there are no affected APIs (or "No response") write "None.".
+
+    Always reply with Markdown. Use active voice, and write in the present tense. When writing the Reason for the change section, write it in this format: "This change is a [sentence case name](../categories.md#book-mark).`;
 }   
-
-// export function formatFilePrompt(sourceFile: string, targetFile: string): string {
-//     return `The following Markdown file contains a certain style that I'd like for you to mimic. It has a specific order of headings and sections. It also has a specific and informative way of presenting the information, that's consistent and uses active voice. The overall tone is friendly and helpful. The information is presented in a way that's concise. Here's what you need to mimic:
-    
-//     "${sourceFile}"
-
-//     Again, please note the order of the headings. The next bit of content is the target file that contains , that the domain-specific language (DSL) content is in the following file and use the earlier source file as a template to create a new Markdown file that has the same style, flow, tone, voice, and structure. Here's it's raw content. "${targetFile}"
-
-//     Now please create a new Markdown file that has the same style, flow, tone, voice, and structure as the source file.`;
-// }   
