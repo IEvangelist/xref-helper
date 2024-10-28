@@ -79,14 +79,14 @@ export function getBreakingChangePrompt(issue: Issue): string {
     You'll need to write a file with the following, a markdown frontmatter similar to:
     ---
     title: "${issue.title}"
-    description: <TODO: Summarize the article>
+    description: <TODO: Summarize the article here, but limit to 160 characters.>
     ms.date: ${new Date().toLocaleDateString('en-US')}
     ---
 
     And then the following sections:
 
     - h1: "${issue.title}"
-      A brief summary of the breaking change.
+      An introductory paragraph summarizing the breaking change.
     - h2: Version introduced
       A single phrase, such as .NET Aspire 9.0 GA.
     - h2: Previous behavior

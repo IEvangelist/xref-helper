@@ -34,7 +34,7 @@
           {
             "name": "breaking-changes",
             "isSticky": true,
-            "description": "Pass a GitHub issue URL to pull info from, and generate a breaking-change article based on it."
+            "description": "Provide a GitHub issue URL and `@learn` will generate a breaking-change article based on it."
           }
         ]
       }
