@@ -51,11 +51,10 @@ export const replaceUserSelectedText = (replacement: string): void => {
  */
 export const replaceExistingXrefText = (replacement: string): void => {
     const editor = window.activeTextEditor;
-    //const selection = editor?.selection;
 
+    // The final angle bracket may or may not be present.
     const range = editor?.document.getWordRangeAtPosition(editor?.selection.end, /<(xref):>?/si);
     if (range) {
-        //const text = editor?.document.getText(range);
         editor!.selection = new Selection(range.start, range.end);
     }
 
