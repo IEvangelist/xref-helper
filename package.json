@@ -193,7 +193,7 @@
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.9",
     "@types/node": "22.x",
-    "@types/node-fetch": "^2.6.11",
+    "@types/node-fetch": "^2.6.12",
     "@types/vscode": "^1.95.0",
     "@types/xml2js": "^0.4.14",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
