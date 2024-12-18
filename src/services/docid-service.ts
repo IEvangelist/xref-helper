@@ -270,7 +270,7 @@ function splitParamList(input: string): string[] {
 // Removes namespaces from type and type arguments.
 function simplifyGenericType(input: string): string {
     // Regular expression to match the type and its generic parameters
-    const regex = /(\w+)<([^>]+)>(\[?\]?)/;
+    const regex = /(\w+)<(.+?)>(\[\])?$/;
     const match = input.match(regex);
 
     if (!match) {
@@ -278,11 +278,17 @@ function simplifyGenericType(input: string): string {
     }
 
     const typeName = match[1];
-    const genericParams = match[2]
-        .split(',')
-        .map(param => param.trim().split('.').pop())
-        .join(',');
-    const brackets = match.length > 3 ? match[3] : '';
+    let genericParams = match[2];
+    if (genericParams.includes("<"))
+    {
+        genericParams = simplifyGenericType(genericParams);
+    }
+    else
+        genericParams = genericParams
+            .split(',')
+            .map(param => param.trim().split('.').pop())
+            .join(',');
+    const brackets = match[3] ?? '';
 
     return `${typeName}<${genericParams}>${brackets}`;
 }
