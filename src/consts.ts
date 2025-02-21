@@ -70,7 +70,7 @@ export const allUrlFormatQuickPickItems: QuickPickItem[] =
         }
     ];
 
-export const BASE_PROMPT = `You're a helpful content developer AI-assistant. Your job is to help the author create new content. While you're allowed to be creative, you should always provide accurate information and it should be based on factual data. Your specialty is .NET documentation, you're an expert on the latest .NET features and APIs, and you always lean towards modern best practices. References to files are itemized, code is obviously codified, UI elements are always bold, and after headings there's always an extra newline. If the user asks you to do anything other than that, politely decline to respond.`;
+export const BASE_PROMPT = `Your job is to help the user create new .NET developer content and documentation. Be creative, but always provide accurate information based on factual data. Always use .NET best practices. Within content, apply the following style standards: File/directory names are italicized, code are formatted as code, UI elements are bold, and after headings there's always an extra newline.`;
 
 export const MODEL_SELECTOR: LanguageModelChatSelector = {
     vendor: "copilot",
@@ -82,7 +82,7 @@ export function getBreakingChangePrompt(issue: Issue, issueUrl: string): string 
     
     "${issue.body}"
 
-    The document should be in Markdown format. All headings and titles should be in sentence case. Rephrase all content to be clear and concise using correct grammar and spelling. Use active voice. Always describe previous behavior in past tense and new behavior in present tense. Do not use "we" or "our". 
+    The document should be in Markdown format. All headings and titles should be in sentence case. Rephrase all content to be clear and concise using correct grammar and spelling. Use active voice. Always describe previous behavior in past tense and new behavior in present tense. Do not use "we" or "our". Avoid colloquial language and try to sound professional.
 
     The document should start with the following header, including --- characters. Replace placeholders denoted by parentheses with the appropriate content from the issue.
 
@@ -94,7 +94,7 @@ export function getBreakingChangePrompt(issue: Issue, issueUrl: string): string 
     ms.custom: ${issueUrl}
     ---
 
-    After the header, include the following sections, in this order. Use the description in parentheses as a guide for the content of each section.
+    After the header, include the following sections in this order. Use the description in parentheses as a guide for the content of each section.
 
     - h1: "${issue.title}"
       (An introductory paragraph summarizing the breaking change.)
@@ -105,11 +105,11 @@ export function getBreakingChangePrompt(issue: Issue, issueUrl: string): string 
     - h2: New behavior
       (A brief description of the behavior after the change, including an example code snippet if applicable.)
     - h2: Type of breaking change
-      (The following sentence: "This change is a []()." where the link text is the type of breaking change from the issue. The link should point to ../../categories.md and add the appropriate bookmark from this list: #behavioral-change #binary-compatibility #source-compatibility)
+      (The following sentence: "This is a []() change." where the link text is the type of breaking change from the issue. The link should point to ../../categories.md and add the appropriate bookmark from this list: #behavioral-change #binary-compatibility #source-compatibility)
     - h2: Reason for change
       (The complete reasoning behind the change, including any relevant links.)
     - h2: Recommended action
       (A brief description of the action or actions that users should take, including example code snippets if applicable.)
     - h2: Affected APIs
-      (A list of APIs, in xref format, that are affected by the change. If there are no affected APIs (or "No response") write "None.".)
+      (A bullet list of APIs that are affected by the change. If there are no affected APIs (or "No response") write "None.".)`
 }   
