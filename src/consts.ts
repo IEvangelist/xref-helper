@@ -78,37 +78,38 @@ export const MODEL_SELECTOR: LanguageModelChatSelector = {
 };
 
 export function getBreakingChangePrompt(issue: Issue, issueUrl: string): string {
-    return `All headings and titles should be in sentence case-but start with a capital letter for the first word. Please create a Markdown file that contains the breaking changes from the following GitHub issue:
+    return `Please create a "breaking changes" document from the following GitHub issue:
     
     "${issue.body}"
 
-    You'll need to write a file with the following, a markdown frontmatter similar to:
+    The document should be in Markdown format. All headings and titles should be in sentence case. Rephrase all content to be clear and concise using correct grammar and spelling. Use active voice. Always describe previous behavior in past tense and new behavior in present tense. Do not use "we" or "our". 
+
+    The document should start with the following header, including --- characters. Replace placeholders denoted by parentheses with the appropriate content from the issue.
+
     ---
-    title: "${issue.title}"
-    description: <TODO: Summarize the article here, but limit to 160 characters.>
+    title: "Breaking change - ${issue.title}"
+    description: "Learn about the breaking change in (product/version) where (very brief description)."
     ms.date: ${new Date().toLocaleDateString('en-US')}
     ai-usage: ai-assisted
     ms.custom: ${issueUrl}
     ---
 
-    And then the following sections:
+    After the header, include the following sections, in this order. Use the description in parentheses as a guide for the content of each section.
 
     - h1: "${issue.title}"
-      An introductory paragraph summarizing the breaking change.
+      (An introductory paragraph summarizing the breaking change.)
     - h2: Version introduced
-      A single phrase, such as .NET Aspire 9.0 GA.
+      (The version in which the breaking change was introduced.)
     - h2: Previous behavior
-      A brief description of the behavior before the change, including a code snippet if applicable.
+      (A brief description of the behavior before the change, including an example code snippet if applicable.)
     - h2: New behavior
-      A brief description of the behavior after the change, including a code snippet if applicable.
+      (A brief description of the behavior after the change, including an example code snippet if applicable.)
     - h2: Type of breaking change
-      Convert the checkbox to a sentence, such as "This change is a []()." where the link points to the appropriate category in the categories.md file.
+      (The following sentence: "This change is a []()." where the link text is the type of breaking change from the issue. The link should point to ../../categories.md and add the appropriate bookmark from this list: #behavioral-change #binary-compatibility #source-compatibility)
     - h2: Reason for change
-      The complete reasoning behind the change, including any relevant links.
+      (The complete reasoning behind the change, including any relevant links.)
     - h2: Recommended action
-      A brief description of the action or actions that users should take, including code snippets if applicable.
+      (A brief description of the action or actions that users should take, including example code snippets if applicable.)
     - h2: Affected APIs
-      A list of APIs, in xref format, that are affected by the change. If there are no affected APIs (or "No response") write "None.".
-
-    Use active voice and write in the present tense. When writing the 'Type of breaking change' section, write it in this format: "This change is a [sentence case name](../categories.md#book-mark).`;
+      (A list of APIs, in xref format, that are affected by the change. If there are no affected APIs (or "No response") write "None.".)
 }   
